@@ -1,4 +1,4 @@
-#test the analytical result La is simila to numerical result Ln
+#test whether the analytical result La is similar to numerical result Ln; printing out the results for now. Will use isapprox test when everything is debugged.
 using AnalytIntegralD0
 
 #define triangles

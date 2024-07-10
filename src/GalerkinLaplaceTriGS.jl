@@ -28,7 +28,7 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
     h4, s0 = GSorthogonalization_expan(e4, a)
     e4x = s0[1]*a1 + s0[2]*a2 + s0[3]*a3 + s0[4]*a4
 
-    #Define parmeters of the 2D integrals
+    #Define parmeters of the 3D integrals
     a11 = a12 = a13 = a34 = a[1]
     a21 = a22 = a23 = a36 = a[2]
     a31 = a14 = a15 = a16 = a[3]
@@ -46,7 +46,7 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
     I35 = (1 + s0[1] + s0[2])*I3(e35, [a15,a25,a35], h4)
     I36 = -s0[1]*I3(e36, [a16,a26,a36], h4)
 
-    #calculate 3D integrals for 
+    #calculate 4D integrals
     I4 = I31 + I32 + I33 + I34 + I35 + I36
 
     L = 4*Ax*Ay*I4

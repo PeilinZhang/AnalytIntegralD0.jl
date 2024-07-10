@@ -1,41 +1,7 @@
-The h values are not stable Integral: 0.07588935481236532
-NaN NaN NaN 6.6968535557915e-310
-8
-ERROR: Error: h does not satisfy any case
-Stacktrace:
- [1] Identify_cases
-   @ ~/.julia/dev/AnalytIntegralD0/src/cases.jl:21 [inlined]
- [2] I1(e1::Vector{Float64}, a1::Vector{Vector{Float64}}, h2::Float64, h3::Float64, h4::Float64)
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/I1.jl:30
- [3] I2s(e::Vector{Float64}, a::Vector{Vector{Float64}}, h3::Float64, h4::Float64)
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/I2s.jl:16
- [4] I3(e::Vector{Float64}, a::Vector{Vector{Float64}}, h4::Float64)
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/I3.jl:18
- [5] GalerkinLaplaceTriGS(x1::Vector{…}, x2::Vector{…}, x3::Vector{…}, y1::Vector{…}, y2::Vector{…}, y3::Vector{…})
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/GalerkinLaplaceTriGS.jl:42
- [6] top-level scope
-   @ ~/.julia/dev/AnalytIntegralD0/test/testL.jl:13
-Some type information was truncated. Use `show(err)` to see complete types.
+Problems:
 
-Integral: 0.07588935481236532
-NaN NaN 0.0 2.6413104772198654e233
-8
-ERROR: Error: h does not satisfy any case
-Stacktrace:
- [1] Identify_cases
-   @ ~/.julia/dev/AnalytIntegralD0/src/cases.jl:21 [inlined]
- [2] I1(e1::Vector{Float64}, a1::Vector{Vector{Float64}}, h2::Float64, h3::Float64, h4::Float64)
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/I1.jl:30
- [3] I2s(e::Vector{Float64}, a::Vector{Vector{Float64}}, h3::Float64, h4::Float64)
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/I2s.jl:16
- [4] I3(e::Vector{Float64}, a::Vector{Vector{Float64}}, h4::Float64)
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/I3.jl:18
- [5] GalerkinLaplaceTriGS(x1::Vector{…}, x2::Vector{…}, x3::Vector{…}, y1::Vector{…}, y2::Vector{…}, y3::Vector{…})
-   @ AnalytIntegralD0 ~/.julia/dev/AnalytIntegralD0/src/GalerkinLaplaceTriGS.jl:42
- [6] top-level scope
-   @ ~/.julia/dev/AnalytIntegralD0/test/testL.jl:13
-Some type information was truncated. Use `show(err)` to see complete types.
+1. the h value calculated is different every time.
 
-Integral: 0.07588935481236532
-0.5 0.7071067811865476 6.6968488750405e-310 6.69640859182196e-310
-3
+2. in I1.jl, some value is of type "nothing" but I cannot find which one.
+
+3. When running debugger, the global variant case (defined in AnalytIntegralD0.jl) is not changing when the cases() function finish, which seems cause a problem in I1.jl

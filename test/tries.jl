@@ -1,3 +1,1 @@
-a=b=c =1
-
-a+b
+#The file for testing some julia syntax. Just for my learning purpose.
