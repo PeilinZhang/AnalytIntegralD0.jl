@@ -43,11 +43,3 @@ function integrate_triangles(vertices1, vertices2, n)
 
     return integral
 end
-
-# # Example usage
-# vertices1 = [ [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0] ]
-# vertices2 = [ [1.0, 1.0, 0.0], [2.0, 1.0, 0.0], [1.0, 2.0, 0.0] ]
-
-# n = 10  # number of quadrature points along each triangle edge
-# result = integrate_triangles(vertices1, vertices2, n)
-# println("Integral: $result")

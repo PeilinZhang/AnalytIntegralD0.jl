@@ -10,7 +10,7 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
     u[1] = a[1]
     c = zeros(Float64, n, n)
     for i in 2:n
-        sum_term = Vector{Float64}(undef, length(u[1]))
+        sum_term = zeros(Float64,3) #assumed 3D space, so vector u has 3 elements
         for k in 1:i-1
             ukn = norm(u[k])
             if ukn < zerotol
@@ -54,7 +54,7 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
     end
 
     #find h
-    sum_term = Vector{Float64}(undef, length(u[1]))
+    sum_term = zeros(Float64,3) #same as above, 3D space so vector u have 3 elements
     for i in 1:n
         sum_term += s[i]*a[i]
     end

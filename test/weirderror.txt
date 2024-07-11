@@ -1,7 +1,0 @@
-Problems:
-
-1. the h value calculated is different every time.
-
-2. in I1.jl, some value is of type "nothing" but I cannot find which one.
-
-3. When running debugger, the global variant case (defined in AnalytIntegralD0.jl) is not changing when the cases() function finish, which seems cause a problem in I1.jl

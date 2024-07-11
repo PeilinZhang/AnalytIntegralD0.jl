@@ -19,6 +19,7 @@ function I2s(e,a,h3,h4)
     I14s = -s0[2] * I1(e14, [a14], h2, h3, h4)
 
     #calculate 2D integral for square
+    I2s = I11s + I12s + I13s + I14s
     
     return I2s
 end

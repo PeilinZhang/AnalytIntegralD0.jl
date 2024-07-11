@@ -3,7 +3,7 @@ using AnalytIntegralD0
 
 #define triangles
 vertices1 = [ [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0] ]
-vertices2 = [ [1.0, 1.0, 0.0], [2.0, 1.0, 0.0], [1.0, 2.0, 0.0] ]
+vertices2 = [ [1.0, 1.0, 1.0], [2.0, 1.0, 1.0], [1.0, 2.0, 1.0] ]
 
 n = 10  # number of quadrature points along each triangle edge for numerical calculation
 Ln = integrate_triangles(vertices1, vertices2, n)
