@@ -38,12 +38,14 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
     #Find sj0
     b = zeros(Float64, n)
     s = zeros(Float64, n)
-    for j in 1:n
+    for j in n:-1:1
         b[j] = dot(u[j],e)
         sum_term = 0.0
         Ajj = c[j,j]*((norm(u[j]))^2)
         if Ajj < zerotol
             s[j] = 0.0 #actually no need this line as this is initialised 0
+        elseif j == n #just for the first iteration because there is no other terms
+            s[j] = b[j]/Ajj
         else
             for i in j+1:n
                 Aji = c[j,i]*((norm(u[j]))^2)

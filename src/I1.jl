@@ -7,6 +7,12 @@ function I1(e1, a1, h2, h3, h4) :: Float64
     s01 = s01[1]
     h = R1 = R2 = R4 = 0.0
 
+    #making the smallest two h zero
+    h_all = [h1,h2,h3,h4]
+    i = sortperm(h_all)
+    h_all[i[1]] = 0.0; h_all[i[2]] = 0.0
+    h1 = h_all[1]; h2 = h_all[2]; h3 = h_all[3]; h4 = h_all[4]
+
     #define P
     function P1(s1::Float64) :: Float64
         P1_result = norm(s1+s01)*norm(a1)
@@ -23,6 +29,9 @@ function I1(e1, a1, h2, h3, h4) :: Float64
             phi_result = log((R1+R4)/sqrt(h^2-h1^2))/R1
         elseif index == 4
             phi_result = ((R2*log((R2+R4)/eta)/h2)-log((h2+h)/eta))*eta^2/P_value^2/h2
+        end
+        if isnan(phi_result) #solving divide by zero
+            phi_result = 0.0
         end
         return phi_result
     end
@@ -54,8 +63,10 @@ function I1(e1, a1, h2, h3, h4) :: Float64
         end
         return F1_result
     end
-
-    I1 = (1 + s01)*F1(P1(1.0)) - s01*F1(P1(0.0))
+    F11 = F1(P1(1.0))
+    F12 = F1(P1(0.0))
+    I1 = (1 + s01)*F11 - s01*F12
+    println("I1: $I1")
 
     return I1
 end

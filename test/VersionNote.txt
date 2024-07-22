@@ -1,0 +1,18 @@
+Problems in this version:
+
+1. Impossible cases appears. The values used to test in testL.jl are:
+vertices1 = [ [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0] ]
+vertices2 = [ [1.0, 1.0, 1.0], [2.0, 1.0, 1.0], [1.0, 2.0, 1.0] ]
+Or
+vertices1 = [ [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0] ]
+vertices2 = [ [1.0, 1.0, 0.0], [2.0, 1.0, 0.0], [1.0, 2.0, 0.0] ]
+
+
+
+
+----------------------------------------------------
+Plans for the next version:
+The Matlab code provided with the paper set the lowest two h values to be zero.
+I do not really understand why do they do that, although the lemmas say at least
+2 h values should be zero.
+It is possible that it is just for rounding values that are small enough to zero.

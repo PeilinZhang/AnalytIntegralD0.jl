@@ -21,6 +21,7 @@ function I2t(e,a,h3,h4)
 
     #calculate 2D integral for square
     I2t = I11t + I12t + I13t
+    println("I2: $I2t")
 
     return I2t 
 end

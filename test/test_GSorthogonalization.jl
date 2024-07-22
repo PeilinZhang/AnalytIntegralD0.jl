@@ -1,6 +1,6 @@
 using LinearAlgebra
 using Test
-# using AnalytIntegralD0
+using AnalytIntegralD0
 
 zero_tol = 1e-100
 
@@ -47,12 +47,12 @@ end
 
 # Run the test
     # Example set of vectors (replace with specific test cases)
-a = [
-    [1.0, 0.0, 0.0],
-    [1.0, 1.0, 0.0],
-    [1.0, 1.0, 1.0],
-    [2.0, 2.0, 0.0]
-]
+# a = [
+#     [1.0, 0.0, 0.0],
+#     [1.0, 1.0, 0.0],
+#     [1.0, 1.0, 1.0],
+#     [2.0, 2.0, 0.0]
+# ]
 
 #need to go to the function and discomment the lines that returns u and comments off the lines that returns s and h.
 # test_GSorthogonalization(a)
@@ -75,9 +75,8 @@ end
 # Run the test
 # Define test inputs
 e = [1.0, 2.0, 3.0]
-a = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-expected_h = 0.0
-expected_s = [1.0, 2.0, 3.0]
+a = [[1.0, 0.0, 0.0],[0.0, 1.0, 0.0], [0.0, 1.0, 0.0],[0.0, 0.0, 0.0]]
+expected_h = 3.0
+expected_s = [1.0, 2.0, 0.0, 0.0]
 
 test_GSorthogonalization(e,a,expected_h, expected_s)
-

@@ -19,11 +19,12 @@ function I3(e,a,h4)
     I22 = -s0[1] * I2s(e22,[a12,a22],h3,h4)
     I23 = -s0[2] * I2s(e23,[a13,a23],h3,h4)
     I24 = (1+s0[3])*I2t(e24,[a14,a24],h3,h4)
-    I25 = -s0[3]*Ist(e25,[a15,a25],h3,h4)
+    I25 = -s0[3]*I2t(e25,[a15,a25],h3,h4)
 
 
     #calculate 3D integrals for 
     I3 = I21 + I22 + I23 + I24 + I25
+    println("I3: $I3")
 
     return I3
     

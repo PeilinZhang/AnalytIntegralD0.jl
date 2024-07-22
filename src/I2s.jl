@@ -9,7 +9,7 @@ function I2s(e,a,h3,h4)
     a11 = a12 = a[2]
     a13 = a14 = a[1]
     e12 = e14 = a[1]*s0[1] + a[2]*s0[2]
-    e11 = e12+a[1]
+    e11 = e12 + a[1]
     e13 = e12 + a[2]
 
     #calculate boundary integrals
@@ -20,6 +20,6 @@ function I2s(e,a,h3,h4)
 
     #calculate 2D integral for square
     I2s = I11s + I12s + I13s + I14s
-    
+    println("I2: $I2s")
     return I2s
 end
