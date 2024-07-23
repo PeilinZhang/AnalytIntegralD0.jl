@@ -1,5 +1,6 @@
-function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
+function GalerkinLaplaceTriGS2(x1,x2,x3,y1,y2,y3)
 
+    #2 at the end, meaning it is for double layer potential.
     #Triangle transformation
     # Define the edge vectors
     lx1 = x2 - x1; lx2 = x3 - x2; lx3 = x1 - x3
@@ -39,19 +40,13 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
     e32 = e31 + a[3]
     e35 = e31 + a[1]
 
-    #calculate boundary integrals
-    I31 = -s0[4] * I3(e31, [a11,a21,a31], h4)
-    I32 = (1 + s0[3] + s0[4])*I3(e32, [a12,a22,a32], h4)
-    I33 = -s0[3] * I3(e33, [a14,a24,a34], h4)
-    I34 = -s0[2] * I3(e34, [a14,a24,a34], h4)
-    I35 = (1 + s0[1] + s0[2])*I3(e35, [a15,a25,a35], h4)
-    I36 = -s0[1]*I3(e36, [a16,a26,a36], h4)
+    #using h0 to check whether the triangles are parallel
+    if h0 < zerotol
+        #nondegenerative case
+        Fx=6*Ay*(ellx1*I34*ncx1+ellx3*I35*ncx3+ellx2*I36*ncx2)
+        Fy=6*Ax*(elly1*I31*ncy1+elly3*I32*ncy3+elly2*I33*ncy2)
+    else
+        #degenerative case
 
-    #calculate 4D integrals
-    I4 = I31 + I32 + I33 + I34 + I35 + I36
-
-    L = 4*Ax*Ay*I4
-
-    return L
 
 end
