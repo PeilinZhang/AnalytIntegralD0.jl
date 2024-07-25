@@ -1,6 +1,6 @@
 #test whether the analytical result La is similar to numerical result Ln; printing out the results for now. Will use isapprox test when everything is debugged.
 using AnalytIntegralD0
-using BEAST
+# using BEAST
 
 # #define triangles
 # vertices1 = [ [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0] ]
@@ -49,6 +49,13 @@ using BEAST
 
 #define triangles
 vertices1 = [ [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0] ]
-vertices2 = [ [1.0, 1.0, 1.0], [2.0, 1.0, 1.0], [1.0, 2.0, 0.0] ]
-La = GalerkinLaplaceTriGS1(vertices1[1], vertices1[2], vertices1[3], vertices2[1], vertices2[2], vertices2[3]) 
-println("Integral: $La")
+vertices2 = [ [1.0, 1.0, 1.0], [2.0, 1.0, 1.0], [1.0, 2.0, 1.0] ]
+L, M, Ld, Md = GalerkinLaplaceTriGS(vertices1[1], vertices1[2], vertices1[3], vertices2[1], vertices2[2], vertices2[3]) 
+println("Integral: L: $L, M: $M, Ld: $Ld, Md: $Md")
+println("matlab  : 0.1418          0.0474        [-0.0448   -0.0448   -0.0474]         -0.0025")
+
+vertices1 = [ [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0] ]
+vertices2 = [ [1.0, 1.0, 1.0], [2.0, 1.0, 1.0], [2.0, 3.0, 2.0] ]
+L, M, Ld, Md = GalerkinLaplaceTriGS(vertices1[1], vertices1[2], vertices1[3], vertices2[1], vertices2[2], vertices2[3]) 
+println("Integral: L: $L, M: $M, Ld: $Ld, Md: $Md")
+println("matlab  : 0.2490          0.0684        [-0.0674   -0.0608   -0.0684]         -0.0189")

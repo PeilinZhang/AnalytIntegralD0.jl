@@ -1,4 +1,4 @@
-function I3(e,a,h4)
+function I3m(e,a,h4)
     #Find 3D integral from 3D domian boundaries(2D integrals)
     #the 3D shapes are prisms; The a passed down here should have 3 vectors
 
@@ -18,36 +18,36 @@ function I3(e,a,h4)
     if abs(1 + s0[1] + s0[2]) < zerotol
         I21 = 0
     else
-        I21 = (1 + s0[1] + s0[2])*I2s(e21,[a11,a21],h3,h4)
+        I21 = (1 + s0[1] + s0[2])*I2sm(e21,[a11,a21],h3,h4)
     end
     if abs(s0[1]) < zerotol
         I22 = 0
     else
-        I22 = -s0[1] * I2s(e22,[a12,a22],h3,h4)
+        I22 = -s0[1] * I2sm(e22,[a12,a22],h3,h4)
     end
     if abs(s0[2]) < zerotol
         I23 = 0
     else
-        I23 = -s0[2] * I2s(e23,[a13,a23],h3,h4)
+        I23 = -s0[2] * I2sm(e23,[a13,a23],h3,h4)
     end
     if abs(1+s0[3]) < zerotol
         I24 = 0
     else
-        I24 = (1+s0[3])*I2t(e24,[a14,a24],h3,h4)
+        I24 = (1+s0[3])*I2tm(e24,[a14,a24],h3,h4)
     end
     if abs(s0[3]) < zerotol
         I25 = 0
     else
-        I25 = -s0[3]*I2t(e25,[a15,a25],h3,h4)
+        I25 = -s0[3]*I2tm(e25,[a15,a25],h3,h4)
     end
 
 
     #calculate 3D integrals for 
     I3_sum = I21 + I22 + I23 + I24 + I25
     if testMode == 1
-        println("I3: $I3_sum")
+    println("I3: $I3_sum")
     end
-    
+
     return I3_sum
     
 end

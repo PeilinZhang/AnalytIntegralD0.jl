@@ -27,9 +27,6 @@ function GalerkinLaplaceTriGS1(x1,x2,x3,y1,y2,y3)
     a1=lx1; a2=-lx3; a3=-ly1; a4=ly3; e4=x1-y1;
     a = [a1, a2, a3, a4]
     h4, s0 = GSorthogonalization_expan(e4, a)
-    println()
-    println("h4: $h4")
-    println()
     e4x = s0[1]*a1 + s0[2]*a2 + s0[3]*a3 + s0[4]*a4
 
     #Define parmeters of the 3D integrals

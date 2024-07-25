@@ -1,4 +1,5 @@
 function I0(P,h1,h2,h3,h4)
+    #calculate 1D PBF
 
     hh = h1*h1 + h2*h2 + h3*h3 + h4*h4
     R = sqrt(P*P + hh)
@@ -7,9 +8,10 @@ function I0(P,h1,h2,h3,h4)
 
     # case = cases(h1,h2,h3,h4)
     # print("case: $case")
-
-    print("hs: ", h1, " ", h2, " ", h3, " ", h4, " ")
-
+    if testMode == 1
+        println("hs: ", h1, " ", h2, " ", h3, " ", h4, " ")
+    end
+    
     if hh < zero2*P*P
         Phi1 = log(P) / P
         I = Phi1 / 6
@@ -55,15 +57,20 @@ function I0(P,h1,h2,h3,h4)
                     Phi4 = h4*h4 / (h2 * P*P) * ((R2 / h2 * log((R2 + R) / h4) - log((h2 + h) / h4)))
                     I = ((1 + 3*h4*h4 / (h2*h2)) * Phi1 - 2 * (h4 / h2)^3 * Phi2 - 3 * Phi4 + (2*h4*h4 - h2*h2) / (h2*h2 * (R + h))) / 6
                 else
-                    println("I0 executed a prohibited option")
                     I = 0
+                    if testMode == 1
+                    println("I0 executed a prohibited option")
                     println("h1 = $(h1)  h2 = $(h2)  h3 = $(h3)  h4 = $(h4)")
+                    end
                 end
             end
         end
     end
-    println("I: ", I)
-    return I
 
+    if testMode == 1
+        println("I0: ", I)
+    end
+
+    return I
 
 end

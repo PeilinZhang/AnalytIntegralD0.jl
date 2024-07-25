@@ -1,4 +1,4 @@
-function I2t(e,a,h3,h4)
+function I2tm(e,a,h3,h4)
     #Find 2D integral from 2D domian boundaries(1D integrals)
     #There is triangle surface and square surface. This is for the triangle surface
     #the a passed down here should have 2 vectors
@@ -18,23 +18,24 @@ function I2t(e,a,h3,h4)
     if abs(s0[1]) < zerotol
         I11t = 0
     else
-        I11t = -s0[1] * I1(e12, [a12], h2, h3, h4)
+        I11t = -s0[1] * I1m(e12, [a12], h2, h3, h4)
     end
     if abs(s0[2]) < zerotol
         I12t = 0
     else
-        I12t = -s0[2] * I1(e14, [a14], h2, h3, h4)
+        I12t = -s0[2] * I1m(e14, [a14], h2, h3, h4)
     end
     if abs(1+s0[1]+s0[2]) < zerotol
         I13t = 0
     else
-        I13t = (1+s0[1]+s0[2])*I1(e15, [a15], h2, h3, h4)
+        I13t = (1+s0[1]+s0[2])*I1m(e15, [a15], h2, h3, h4)
     end
 
     #calculate 2D integral for square
     I2t_sum = I11t + I12t + I13t
+
     if testMode == 1
-        println("I2: $I2t_sum")
+        println("I2m: $I2t_sum")
     end
     
     return I2t_sum
