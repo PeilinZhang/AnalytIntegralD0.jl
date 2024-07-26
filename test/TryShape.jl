@@ -10,13 +10,15 @@ vertices = Γ.vertices
 faces = Γ.faces
 
 n = length(faces)
+
 #iterate over faces
 A = Matrix{Float64}(undef,n,n)
 fill!(A,0)
 
 for i = 1:n
     for j = 1:n
-        A[i,j],~,~,~ = GalerkinLaplaceTriGS(vertices[faces[i][1]],vertices[faces[i][2]],vertices[faces[i][3]],vertices[faces[j][1]],vertices[faces[j][2]],vertices[faces[j][3]])
+        A0,~,~,~ = GalerkinLaplaceTriGS(vertices[faces[i][1]],vertices[faces[i][2]],vertices[faces[i][3]],vertices[faces[j][1]],vertices[faces[j][2]],vertices[faces[j][3]])
+        A[i,j] = A0/4/pi
     end
 end
 

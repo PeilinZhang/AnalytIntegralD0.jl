@@ -1,5 +1,5 @@
 function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
-
+    #TODO L need to be divided by 4*pi
     #2 at the end, meaning it is for double layer potential.
     #Triangle transformation
     # Define the edge vectors
@@ -55,22 +55,22 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
         Fx=6*Ay*(ellx1*ncx1*I34+ellx3*ncx3*I36+ellx2*ncx2*I35) # I'= 3I from the paper formula (4.8), then use (4.5)
         Fy=6*Ax*(elly1*ncy1*I31+elly3*ncy3*I33+elly2*ncy2*I32)
 
-        # M = (dot(nx, Fy) - nxy*dot(ny, Fx))/(nxy^2 - 1) #does not work?
+        M = (dot(nx, Fy) - nxy*dot(ny, Fx))/(nxy^2 - 1) #may not work but worked fine till now
         
-        # it seems that there is divide by small number problem so a ifelse statement is used for checking whether 1=nxy2 is small
-        nxy2 = nxy * nxy
-        if (1 - nxy2) > 0.5
-            swi = 0
-            M = (nxy * dot(ny, Fx) - dot(nx, Fy)) / (1 - nxy2)
-        else
-            swi = 1
-            si = sign(nxy)
-            ep = ny .- si .* nx
-            eps = norm(ep)
-            epn = ep ./ eps
-            Fxy = ((1 - 0.5 * eps * eps) .* Fx .+ Fy) ./ (eps * (1 - 0.25 * eps * eps))
-            M = si * dot(epn, Fxy)
-        end
+        # # Below is learned from matlab code. it seems that there is divide by small number problem so a ifelse statement is used for checking whether 1=nxy2 is small
+        # nxy2 = nxy * nxy
+        # if (1 - nxy2) > 0.5
+        #     swi = 0
+        #     M = (nxy * dot(ny, Fx) - dot(nx, Fy)) / (1 - nxy2)
+        # else
+        #     swi = 1
+        #     si = sign(nxy)
+        #     ep = ny .- si .* nx
+        #     eps = norm(ep)
+        #     epn = ep ./ eps
+        #     Fxy = ((1 - 0.5 * eps * eps) .* Fx .+ Fy) ./ (eps * (1 - 0.25 * eps * eps))
+        #     M = si * dot(epn, Fxy)
+        # end
 
     else
         #degenerative case
