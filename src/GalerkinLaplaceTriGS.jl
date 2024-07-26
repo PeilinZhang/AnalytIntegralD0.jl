@@ -1,5 +1,4 @@
 function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
-    #TODO L need to be divided by 4*pi
     #2 at the end, meaning it is for double layer potential.
     #Triangle transformation
     # Define the edge vectors
@@ -24,6 +23,7 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
 
     # Calculate the dot product
     nxy = dot(nx, ny)
+    nxy1 = min(norm(nx+ny),norm(nx-ny))
 
     a1=lx1; a2=-lx3; a3=-ly1; a4=ly3; e4=x1-y1;
     h4, s0 = GSorthogonalization_expan(e4, [a1, a2, a3, a4])
@@ -39,9 +39,9 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
     e32 = e31 + a3
     e35 = e31 + a1
 
-    #Using h4 to check whether the triangles are parallel
-    if h4 < zerotol
+    if nxy1 > zerotol
         #nondegenerative case
+        h4 = 0
         I31 = I3(e31, [a11,a21,a31], h4)
         I32 = I3(e32, [a12,a22,a32], h4)
         I33 = I3(e33, [a13,a23,a33], h4)

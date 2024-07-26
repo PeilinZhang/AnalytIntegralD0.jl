@@ -24,6 +24,10 @@ function I1(e1, a1, h2, h3, h4) :: Float64
     if abs(s01) > zerotol
         I -= s01 * I0(P2, h1, h2, h3, h4)
     end
+    
+    if testMode == 1
+        println("I1: $I")
+    end
 
     return I
 
