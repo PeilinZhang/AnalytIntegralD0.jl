@@ -13,10 +13,11 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
         sum_term = zeros(Float64,3) #assumed 3D space, so vector u has 3 elements
         for k in 1:i-1
             ukn = norm(u[k])
-            if ukn < zerotol
-                ukn = 1
+            if ukn^2 < zerotol
+                c[k,i] = 0.0
+            else
+                c[k,i] = dot(u[k],a[i])/(ukn^2)
             end
-            c[k,i] = dot(u[k],a[i])/(ukn^2)
             sum_term += c[k,i] * u[k]
         end
         u[i] = a[i] - sum_term
@@ -26,7 +27,7 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
     for i in 1:n
         for j in 1:n
             ujn = norm(u[j])
-            if ujn < zerotol
+            if ujn^2 < zerotol
                 ujn = 1
             end
             c[j,i] = dot(u[j],a[i])/(ujn^2)

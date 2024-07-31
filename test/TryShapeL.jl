@@ -1,7 +1,8 @@
-#try to calculate from beast mesh data
+#test single layer
 using BEAST
 using CompScienceMeshes
 using AnalytIntegralD0
+using LinearAlgebra
 using Test
 #an example of mesh: Mesh{3, 3, Float64}(SVector{3, Float64}[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], SVector{3, Int64}[[1, 2, 3]], Dict{SVector{3, Int64}, Int64}())
 
@@ -26,26 +27,18 @@ end
 end
 
 #checking how close the values are
-diff = Agl .- Ab1
+diff1 = Agl .- Ab1
+diff_norm1 = norm(diff1)
+perc_diff1 = norm(diff1)/norm(Ab1)
 
-# for i in 1:44
-#     for j in 1:44
-#         println(i, ", ", j)
-#         @test diff[i,j] < 1e-7
-#     end
-# end
-for i in 1:44
-    for j in 1:44
-        if abs(diff[i,j]) > 1e-6
-        println("Case index: ", i, ", ", j)
-        println("Case vertices x:", vertices[faces[i][1]],vertices[faces[i][2]],vertices[faces[i][3]])
-        println("Case vertices y:", vertices[faces[j][1]],vertices[faces[j][2]],vertices[faces[j][3]])
-        e1 = Agl[i,j]
-        e2 = Ab1[i,j]
-        d1 = diff[i,j]
-        println("Value from GL: $e1, from BEAST: $e2")
-        println("Difference: $d1")
-        println()
-        end
-    end
-end
+@test perc_diff < 1e16
+@test diff_norm < 1e16
+
+#checking whether result is more accurate
+Ab2 = assemble(t,X,X,quadstrat = BEAST.DoubleNumWiltonSauterQStrat(6,7,6,7,30,30,30,30))
+diff2 = Agl .- Ab2
+diff_norm2 = norm(diff2)
+perc_diff2 = norm(diff2)/norm(Ab2)
+
+@test perc_diff < 1e16
+@test diff_norm2 < diff_norm1

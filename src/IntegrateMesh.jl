@@ -1,4 +1,4 @@
-function IntegrateMesh(Γ::CompScienceMeshes.Mesh{3, 3, Float64})
+function IntegrateMesh(Γ::CompScienceMeshes.Mesh{3, 3, Float64}; operator = "singlelayer")
     #TODO Add operator input: Helmholtz3D etc. Do this when how to integrate into BEAST is figured out because Helmholtz3D is defined in BEAST.
     #Actually I can go into GL and only calculate what is needed to reduce runtime
 
@@ -16,8 +16,17 @@ function IntegrateMesh(Γ::CompScienceMeshes.Mesh{3, 3, Float64})
             # if i == 2 && j == 32
             #     error("error is here.")
             # end
-            L0,~,~,~ = GalerkinLaplaceTriGS(vertices[faces[i][1]],vertices[faces[i][2]],vertices[faces[i][3]],vertices[faces[j][1]],vertices[faces[j][2]],vertices[faces[j][3]])
-            A[i,j] = L0/4/pi
+            # if testMode == 1
+            # println("x:$i, y:$j")
+            if operator == "singlelayer"
+                L0,~,~,~ = GalerkinLaplaceTriGS(vertices[faces[i][1]],vertices[faces[i][2]],vertices[faces[i][3]],vertices[faces[j][1]],vertices[faces[j][2]],vertices[faces[j][3]])
+                A[j,i] = L0/4/pi
+            elseif operator == "doublelayer"
+                ~,M0,~,~ = GalerkinLaplaceTriGS(vertices[faces[i][1]],vertices[faces[i][2]],vertices[faces[i][3]],vertices[faces[j][1]],vertices[faces[j][2]],vertices[faces[j][3]])
+                A[j,i] = M0/4/pi
+            else
+                error("Operator does not exist.")
+            end
         end
     end
 

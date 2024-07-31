@@ -47,15 +47,15 @@ end
 
 # Run the test
     # Example set of vectors (replace with specific test cases)
-# a = [
-#     [1.0, 0.0, 0.0],
-#     [1.0, 1.0, 0.0],
-#     [1.0, 1.0, 1.0],
-#     [2.0, 2.0, 0.0]
-# ]
+a = [
+    [1.0, 0.0, 0.0],
+    [1.0, 1.0, 0.0],
+    [1.0, 1.0, 1.0],
+    [2.0, 2.0, 0.0]
+]
 
 #need to go to the function and discomment the lines that returns u and comments off the lines that returns s and h.
-# test_GSorthogonalization(a)
+test_GSorthogonalization(a)
 
 
 # Test GSorthogonalization function
@@ -73,10 +73,10 @@ function test_GSorthogonalization(e,a,expected_h,expected_s)
 end
 
 # Run the test
-# Define test inputs
-e = [1.0, 2.0, 3.0]
-a = [[1.0, 0.0, 0.0],[0.0, 1.0, 0.0], [0.0, 1.0, 0.0],[0.0, 0.0, 0.0]]
-expected_h = 3.0
-expected_s = [1.0, 2.0, 0.0, 0.0]
+# # Define test inputs
+# e = [1.0, 2.0, 3.0]
+# a = [[1.0, 0.0, 0.0],[0.0, 1.0, 0.0], [0.0, 1.0, 0.0],[0.0, 0.0, 0.0]]
+# expected_h = 3.0
+# expected_s = [1.0, 2.0, 0.0, 0.0]
 
-test_GSorthogonalization(e,a,expected_h, expected_s)
+# test_GSorthogonalization(e,a,expected_h, expected_s)

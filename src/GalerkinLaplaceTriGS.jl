@@ -1,5 +1,10 @@
-function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
-    #2 at the end, meaning it is for double layer potential.
+function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3;Ld_output=0,Md_output=0)
+    #L means single layer, M double layer, Ld gradient of single layer, Md normal derivative for second layer
+    #only single layer and double layer will be calculated by default
+    #For the others, set them to 1 to calculate them, set them to 0 to output zero. This saves time.
+
+
+
     #Triangle transformation
     # Define the edge vectors
     x1::Vector{Float64}=x1; x2::Vector{Float64}=x2; x3::Vector{Float64}=x3
@@ -23,7 +28,6 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
 
     # Calculate the dot product
     nxy = dot(nx, ny)
-    nxy1 = min(norm(nx+ny),norm(nx-ny))
 
     a1=lx1; a2=-lx3; a3=-ly1; a4=ly3; e4=x1-y1;
     h4, s0 = GSorthogonalization_expan(e4, [a1, a2, a3, a4])
@@ -39,60 +43,47 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
     e32 = e31 + a3
     e35 = e31 + a1
 
-    if nxy1 > zerotol
-        #nondegenerative case
-        h4 = 0
-        I31 = I3(e31, [a11,a21,a31], h4)
-        I32 = I3(e32, [a12,a22,a32], h4)
-        I33 = I3(e33, [a13,a23,a33], h4)
-        I34 = I3(e34, [a14,a24,a34], h4)
-        I35 = I3(e35, [a15,a25,a35], h4)
-        I36 = I3(e36, [a16,a26,a36], h4)
+    #calculate single layer
+    I31 = I3(e31, [a11,a21,a31], h4)
+    I32 = I3(e32, [a12,a22,a32], h4)
+    I33 = I3(e33, [a13,a23,a33], h4)
+    I34 = I3(e34, [a14,a24,a34], h4)
+    I35 = I3(e35, [a15,a25,a35], h4)
+    I36 = I3(e36, [a16,a26,a36], h4)
 
-        I4 = - s0[4]*I31 + (1 + s0[3] + s0[4])*I32 - s0[3]*I33 - s0[2]*I34 + (1 + s0[1] + s0[2])*I35 - s0[1]*I36
-        L = 4*Ax*Ay*I4 #jacobian is 2A for transformation so here 2Ax * 2Ay = 4 * Ax * Ay
+    I4 = - s0[4]*I31 + (1 + s0[3] + s0[4])*I32 - s0[3]*I33 - s0[2]*I34 + (1 + s0[1] + s0[2])*I35 - s0[1]*I36
+    L = 4*Ax*Ay*I4 #jacobian is 2A for transformation so here 2Ax * 2Ay = 4 * Ax * Ay
+
+    #below calculates M
+    # if nxy1 > zerotol #this causes problem
+    if h4 < 1e-9
+        #nondegenerative case
 
         Fx=6*Ay*(ellx1*ncx1*I34+ellx3*ncx3*I36+ellx2*ncx2*I35) # I'= 3I from the paper formula (4.8), then use (4.5)
         Fy=6*Ax*(elly1*ncy1*I31+elly3*ncy3*I33+elly2*ncy2*I32)
 
-        M = (dot(nx, Fy) - nxy*dot(ny, Fx))/(nxy^2 - 1) #may not work but worked fine till now
-        
-        # # Below is learned from matlab code. it seems that there is divide by small number problem so a ifelse statement is used for checking whether 1=nxy2 is small
-        # nxy2 = nxy * nxy
-        # if (1 - nxy2) > 0.5
-        #     swi = 0
-        #     M = (nxy * dot(ny, Fx) - dot(nx, Fy)) / (1 - nxy2)
-        # else
-        #     swi = 1
-        #     si = sign(nxy)
-        #     ep = ny .- si .* nx
-        #     eps = norm(ep)
-        #     epn = ep ./ eps
-        #     Fxy = ((1 - 0.5 * eps * eps) .* Fx .+ Fy) ./ (eps * (1 - 0.25 * eps * eps))
-        #     M = si * dot(epn, Fxy)
-        # end
+        if abs(nxy^2-1) > zerotol
+            M = (dot(nx, Fy) - nxy*dot(ny, Fx))/(nxy^2 - 1) #may not work but worked fine till now
+        else
+            M = 0.0
+        end
 
     else
         #degenerative case
         delta = -dot(e4, nx)#singed distance between planes
-        h4 = abs(delta)
-
-        I32 = I3(e32, [a12,a22,a32], h4)
-        I34 = I3(e34, [a14,a24,a34], h4)
-        I35 = I3(e35, [a15,a25,a35], h4)
-        I36 = I3(e36, [a16,a26,a36], h4)
-
-        I4 = I32 - s0[2]*I34 + (1 + s0[1] + s0[2])*I35 - s0[1]*I36
-        L = 4*Ax*Ay*I4
+        # h4 = abs(delta)
 
         if h4 < zerotol*norm(e4)
             M = 0
         else
+            # I31m = I3m(e31, [a11,a21,a31], h4)
             I32m = I3m(e32, [a12,a22,a32], h4)
+            # I33m = I3m(e33, [a13,a23,a33], h4)
             I34m = I3m(e34, [a14,a24,a34], h4)
             I35m = I3m(e35, [a15,a25,a35], h4)
             I36m = I3m(e36, [a16,a26,a36], h4)
     
+            # I4m = - s0[4]*I31m + (1 + s0[3] + s0[4])*I32m - s0[3]*I33m - s0[2]*I34m + (1 + s0[1] + s0[2])*I35m - s0[1]*I36m
             I4m = I32m - s0[2]*I34m + (1 + s0[1] + s0[2])*I35m - s0[1]*I36m
             M = 4*Ax*Ay*delta*I4m
         end
@@ -105,21 +96,28 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3)
     end
 
     #finding gradient vector for single layer
-    Ld = - Fx - M*nx
+    if Ld_output == 1
+        Ld = - Fx - M*nx
+    else
+        Ld = 0.0
+    end
 
     #finding normal derivative for double layer
-    H11 = I2s(x1-y1,[lx1, -ly1], 0, 0)
-    H12 = I2s(x1-y2,[lx1, -ly2], 0, 0)
-    H13 = I2s(x1-y3,[lx1, -ly3], 0, 0)
-    H21 = I2s(x2-y1,[lx2, -ly1], 0, 0)
-    H22 = I2s(x2-y2,[lx2, -ly2], 0, 0)
-    H23 = I2s(x2-y3,[lx2, -ly3], 0, 0)
-    H31 = I2s(x3-y1,[lx3, -ly1], 0, 0)
-    H32 = I2s(x3-y2,[lx3, -ly2], 0, 0)
-    H33 = I2s(x3-y3,[lx3, -ly3], 0, 0)
+    if Md_output == 1
+        H11 = I2s(x1-y1,[lx1, -ly1], 0, 0)
+        H12 = I2s(x1-y2,[lx1, -ly2], 0, 0)
+        H13 = I2s(x1-y3,[lx1, -ly3], 0, 0)
+        H21 = I2s(x2-y1,[lx2, -ly1], 0, 0)
+        H22 = I2s(x2-y2,[lx2, -ly2], 0, 0)
+        H23 = I2s(x2-y3,[lx2, -ly3], 0, 0)
+        H31 = I2s(x3-y1,[lx3, -ly1], 0, 0)
+        H32 = I2s(x3-y2,[lx3, -ly2], 0, 0)
+        H33 = I2s(x3-y3,[lx3, -ly3], 0, 0)
 
-
-    Md = -6*(dot(lx1,ly1)*H11 + dot(lx1,ly2)*H12 + dot(lx1,ly3)*H13 + dot(lx2,ly1)*H21 + dot(lx2,ly2)*H22 + dot(lx2,ly3)*H23 + dot(lx3,ly1)*H31 + dot(lx3,ly2)*H32 + dot(lx3,ly3)*H33)
+        Md = -6*(dot(lx1,ly1)*H11 + dot(lx1,ly2)*H12 + dot(lx1,ly3)*H13 + dot(lx2,ly1)*H21 + dot(lx2,ly2)*H22 + dot(lx2,ly3)*H23 + dot(lx3,ly1)*H31 + dot(lx3,ly2)*H32 + dot(lx3,ly3)*H33)
+    else
+        Md = 0.0
+    end
 
     return L, M, Ld, Md
 
