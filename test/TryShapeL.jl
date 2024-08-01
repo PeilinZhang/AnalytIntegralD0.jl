@@ -31,8 +31,8 @@ diff1 = Agl .- Ab1
 diff_norm1 = norm(diff1)
 perc_diff1 = norm(diff1)/norm(Ab1)
 
-@test perc_diff < 1e16
-@test diff_norm < 1e16
+@test perc_diff1 < 1e16
+@test diff_norm1 < 1e16
 
 #checking whether result is more accurate
 Ab2 = assemble(t,X,X,quadstrat = BEAST.DoubleNumWiltonSauterQStrat(6,7,6,7,30,30,30,30))
@@ -40,5 +40,5 @@ diff2 = Agl .- Ab2
 diff_norm2 = norm(diff2)
 perc_diff2 = norm(diff2)/norm(Ab2)
 
-@test perc_diff < 1e16
+@test perc_diff1 < 1e16
 @test diff_norm2 < diff_norm1
