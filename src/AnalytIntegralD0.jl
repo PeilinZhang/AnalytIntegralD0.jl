@@ -27,6 +27,5 @@ include("IntegrateMesh.jl")
 export GSorthogonalization_expan
 export GalerkinLaplaceTriGS
 export IntegrateMesh
-export integrate_triangles #this is for getting a rough numerical result, which will be used for checking whether the analytical result makes sense.
 
 end
