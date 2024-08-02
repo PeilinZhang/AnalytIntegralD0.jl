@@ -31,36 +31,19 @@ end
     Ab1 = assemble(t,X1,X2,quadstrat = BEAST.DoubleNumWiltonSauterQStrat(6,7,6,7,10,10,10,10))
 end
 
-# #checking how close the values are
-# diff1 = Agl .- Ab1
-# diff_norm1 = norm(diff1)
-# perc_diff1 = norm(diff1)/norm(Ab1)
+#checking how close the values are
+diff1 = Agl .- Ab1
+diff_norm1 = norm(diff1)
+perc_diff1 = norm(diff1)/norm(Ab1)
 
-# @test perc_diff1 < 1e-6
-# @test diff_norm1 < 1e-6
+@test perc_diff1 < 1e-6
+@test diff_norm1 < 1e-6
 
-# #checking whether result is more accurate
-# Ab2 = assemble(t,X1,X2,quadstrat = BEAST.DoubleNumWiltonSauterQStrat(6,7,6,7,30,30,30,30))
-# diff2 = Agl .- Ab2
-# diff_norm2 = norm(diff2)
-# perc_diff2 = norm(diff2)/norm(Ab2)
+#checking whether result is more accurate
+Ab2 = assemble(t,X1,X2,quadstrat = BEAST.DoubleNumWiltonSauterQStrat(6,7,6,7,30,30,30,30))
+diff2 = Agl .- Ab2
+diff_norm2 = norm(diff2)
+perc_diff2 = norm(diff2)/norm(Ab2)
 
-# # @test perc_diff < 1e-16
-# @test diff_norm2 <= diff_norm1
-
-ddd = Agl .- Ab1
-for i in 1:n1
-    for j in 1:n2
-        if abs(ddd[i,j]) > 1e-6 || isnan(Agl[i,j])
-        println("Case index: ", i, ", ", j)
-        println("Case vertices x:", vertices1[faces1[i][1]],vertices1[faces1[i][2]],vertices1[faces1[i][3]])
-        println("Case vertices y:", vertices2[faces2[j][1]],vertices2[faces2[j][2]],vertices2[faces2[j][3]])
-        e1 = Agl[i,j]
-        e2 = Ab1[i,j]
-        d1 = ddd[i,j]
-        println("Value from GL: $e1, from BEAST: $e2")
-        println("Difference: $d1")
-        println()
-        end
-    end
-end
+# @test perc_diff < 1e-1
+@test diff_norm2 <= diff_norm1

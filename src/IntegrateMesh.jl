@@ -29,7 +29,7 @@ function IntegrateMesh(Γ1::CompScienceMeshes.Mesh{3, 3, Float64}, Γ2::CompScie
             elseif operator == "doublelayer"
                 ~,M0,~,~ = GalerkinLaplaceTriGS(vertices2[faces2[j][1]],vertices2[faces2[j][2]],vertices2[faces2[j][3]],vertices1[faces1[i][1]],vertices1[faces1[i][2]],vertices1[faces1[i][3]])
                 A[i,j] = M0/4/pi
-            elseif operator == "doublelayer normal derivative" || operator == "transpose doublelayer"
+            elseif operator == "doublelayer normal derivative"
                 ~,~,~,Md0 = GalerkinLaplaceTriGS(vertices2[faces2[j][1]],vertices2[faces2[j][2]],vertices2[faces2[j][3]],vertices1[faces1[i][1]],vertices1[faces1[i][2]],vertices1[faces1[i][3]], L_output = 0, Md_output = 1)
                 A[i,j] = Md0/4/pi
             else
