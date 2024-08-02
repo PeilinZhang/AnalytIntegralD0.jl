@@ -1,9 +1,6 @@
-function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3;Ld_output=0,Md_output=0)
+function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3;L_output=1,Md_output=0)
     #L means single layer, M double layer, Ld gradient of single layer, Md normal derivative for second layer
-    #only single layer and double layer will be calculated by default
-    #For the others, set them to 1 to calculate them, set them to 0 to output zero. This saves time.
-
-
+    #set L_output to 1 to calculate L, M, Ld; set Md_output to 1 to calculate Md; set them to 0 to output zero. This saves time.
 
     #Triangle transformation
     # Define the edge vectors
@@ -28,6 +25,7 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3;Ld_output=0,Md_output=0)
 
     # Calculate the dot product
     nxy = dot(nx, ny)
+    nxy1 = min(norm(nx+ny), norm(nx-ny))
 
     a1=lx1; a2=-lx3; a3=-ly1; a4=ly3; e4=x1-y1;
     h4, s0 = GSorthogonalization_expan(e4, [a1, a2, a3, a4])
@@ -43,62 +41,65 @@ function GalerkinLaplaceTriGS(x1,x2,x3,y1,y2,y3;Ld_output=0,Md_output=0)
     e32 = e31 + a3
     e35 = e31 + a1
 
-    #calculate single layer
-    I31 = I3(e31, [a11,a21,a31], h4)
-    I32 = I3(e32, [a12,a22,a32], h4)
-    I33 = I3(e33, [a13,a23,a33], h4)
-    I34 = I3(e34, [a14,a24,a34], h4)
-    I35 = I3(e35, [a15,a25,a35], h4)
-    I36 = I3(e36, [a16,a26,a36], h4)
+    if L_output == 1
+        #calculate single layer
+        I31 = I3(e31, [a11,a21,a31], h4)
+        I32 = I3(e32, [a12,a22,a32], h4)
+        I33 = I3(e33, [a13,a23,a33], h4)
+        I34 = I3(e34, [a14,a24,a34], h4)
+        I35 = I3(e35, [a15,a25,a35], h4)
+        I36 = I3(e36, [a16,a26,a36], h4)
 
-    I4 = - s0[4]*I31 + (1 + s0[3] + s0[4])*I32 - s0[3]*I33 - s0[2]*I34 + (1 + s0[1] + s0[2])*I35 - s0[1]*I36
-    L = 4*Ax*Ay*I4 #jacobian is 2A for transformation so here 2Ax * 2Ay = 4 * Ax * Ay
+        I4 = - s0[4]*I31 + (1 + s0[3] + s0[4])*I32 - s0[3]*I33 - s0[2]*I34 + (1 + s0[1] + s0[2])*I35 - s0[1]*I36
+        L = 4*Ax*Ay*I4 #jacobian is 2A for transformation so here 2Ax * 2Ay = 4 * Ax * Ay
 
-    #below calculates M
-    # if nxy1 > zerotol #this causes problem
-    if h4 < 1e-9
-        #nondegenerative case
+        #below calculates M
+        # if nxy1 > zerotol #this causes problem
+        # if h4 < 1e-9#this also causes problem
+        if nxy1 > 1e-9 #now give some more zero torlerance
+            #nondegenerative case
 
-        Fx=6*Ay*(ellx1*ncx1*I34+ellx3*ncx3*I36+ellx2*ncx2*I35) # I'= 3I from the paper formula (4.8), then use (4.5)
-        Fy=6*Ax*(elly1*ncy1*I31+elly3*ncy3*I33+elly2*ncy2*I32)
+            Fx=6*Ay*(ellx1*ncx1*I34+ellx3*ncx3*I36+ellx2*ncx2*I35) # I'= 3I from the paper formula (4.8), then use (4.5)
+            Fy=6*Ax*(elly1*ncy1*I31+elly3*ncy3*I33+elly2*ncy2*I32)
 
-        if abs(nxy^2-1) > zerotol
-            M = (dot(nx, Fy) - nxy*dot(ny, Fx))/(nxy^2 - 1) #may not work but worked fine till now
+            if abs(nxy^2-1) > zerotol
+                M = (dot(nx, Fy) - nxy*dot(ny, Fx))/(nxy^2 - 1) #may not work but worked fine till now
+            else
+                M = 0.0
+            end
+
         else
-            M = 0.0
+            #degenerative case
+            delta = -dot(e4, nx)#singed distance between planes
+            # h4 = abs(delta)
+
+            if h4 <= zerotol#*norm(e4)
+                M = 0.0
+            else
+                # I31m = I3m(e31, [a11,a21,a31], h4)
+                I32m = I3m(e32, [a12,a22,a32], h4)
+                # I33m = I3m(e33, [a13,a23,a33], h4)
+                I34m = I3m(e34, [a14,a24,a34], h4)
+                I35m = I3m(e35, [a15,a25,a35], h4)
+                I36m = I3m(e36, [a16,a26,a36], h4)
+        
+                # I4m = - s0[4]*I31m + (1 + s0[3] + s0[4])*I32m - s0[3]*I33m - s0[2]*I34m + (1 + s0[1] + s0[2])*I35m - s0[1]*I36m
+                I4m = I32m - s0[2]*I34m + (1 + s0[1] + s0[2])*I35m - s0[1]*I36m
+                M = 4*Ax*Ay*delta*I4m
+            end
+
+
+            I34d = I3(e4, [a14,a24,a34], 0)
+            I35d = I3(e4+a1, [a15,a25,a35], 0)
+            I36d = I3(e4, [a16,a26,a36], 0)
+            Fx=6*Ay*(ellx1*ncx1*I34d+ellx3*ncx3*I36d+ellx2*ncx2*I35d)
         end
 
-    else
-        #degenerative case
-        delta = -dot(e4, nx)#singed distance between planes
-        # h4 = abs(delta)
-
-        if h4 < zerotol*norm(e4)
-            M = 0
-        else
-            # I31m = I3m(e31, [a11,a21,a31], h4)
-            I32m = I3m(e32, [a12,a22,a32], h4)
-            # I33m = I3m(e33, [a13,a23,a33], h4)
-            I34m = I3m(e34, [a14,a24,a34], h4)
-            I35m = I3m(e35, [a15,a25,a35], h4)
-            I36m = I3m(e36, [a16,a26,a36], h4)
-    
-            # I4m = - s0[4]*I31m + (1 + s0[3] + s0[4])*I32m - s0[3]*I33m - s0[2]*I34m + (1 + s0[1] + s0[2])*I35m - s0[1]*I36m
-            I4m = I32m - s0[2]*I34m + (1 + s0[1] + s0[2])*I35m - s0[1]*I36m
-            M = 4*Ax*Ay*delta*I4m
-        end
-
-
-        I34d = I3(e4, [a14,a24,a34], 0)
-        I35d = I3(e4+a1, [a15,a25,a35], 0)
-        I36d = I3(e4, [a16,a26,a36], 0)
-        Fx=6*Ay*(ellx1*ncx1*I34d+ellx3*ncx3*I36d+ellx2*ncx2*I35d)
-    end
-
-    #finding gradient vector for single layer
-    if Ld_output == 1
+        #finding gradient vector for single layer
         Ld = - Fx - M*nx
     else
+        L = 0.0
+        M = 0.0
         Ld = 0.0
     end
 
