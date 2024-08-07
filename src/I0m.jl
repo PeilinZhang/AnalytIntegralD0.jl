@@ -13,7 +13,7 @@ function I0m(P,h1,h2,h3,h4)
     
     if h2*h2 < zero2 * hh
         #case 6
-        if P == 0
+        if P == 0.0 #< zerotol??
             Phi2 = h1 / (hh + h4 * R)
         else
             Phi2 = atan(h1 * P / (hh + h4 * R)) / P

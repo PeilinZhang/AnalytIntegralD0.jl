@@ -8,7 +8,7 @@ using Test
 
 #make a sphere
 Γ1 = meshsphere(radius=1.0, h=1.0)
-Γ2 = meshsphere(radius=2.0, h=1.0)
+Γ2 = meshsphere(radius=1.0, h=1.0)
 #here for testing
 vertices1 = Γ1.vertices
 faces1 = Γ1.faces

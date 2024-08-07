@@ -1,9 +1,10 @@
-function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}})
+function GSorthogonalization_expan(e,a)
     # e is a vector; a is a set of vectors that spans a space
     # the returned values:
     # h is the norm of vector component of e that is perpendicular to span(a); 
     # s is the the magnitude of vector components in a such that the component of e that is in span(a) is sum(si0*ai)
 
+    T = promote_type(eltype(e),eltype(a[1]))
     #Orthogonalisation. u is a set of orthogonal vectors such that span(u) = span(a)
     n = length(a)
     u = Vector{Vector{Float64}}(undef, n)
@@ -14,7 +15,7 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
         for k in 1:i-1
             ukn = norm(u[k])
             if ukn^2 < zerotol
-                c[k,i] = 0.0
+                c[k,i] = T(0.0)
             else
                 c[k,i] = dot(u[k],a[i])/(ukn^2)
             end
@@ -28,7 +29,7 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
         for j in 1:n
             ujn = norm(u[j])
             if ujn^2 < zerotol
-                ujn = 1
+                ujn = T(1)
             end
             c[j,i] = dot(u[j],a[i])/(ujn^2)
         end
@@ -41,10 +42,10 @@ function GSorthogonalization_expan(e::Vector{Float64},a::Vector{Vector{Float64}}
     s = zeros(Float64, n)
     for j in n:-1:1
         b[j] = dot(u[j],e)
-        sum_term = 0.0
+        sum_term = T(0.0)
         Ajj = c[j,j]*((norm(u[j]))^2)
         if Ajj < zerotol
-            s[j] = 0.0 #actually no need this line as this is initialised 0
+            s[j] = T(0.0) #actually no need this line as this is initialised 0
         elseif j == n #just for the first iteration because there is no other terms
             s[j] = b[j]/Ajj
         else
